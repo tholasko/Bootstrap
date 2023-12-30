@@ -100,6 +100,7 @@ OSStatus SecCodeCopySigningInformation(SecStaticCodeRef code, SecCSFlags flags, 
         if(WaitForFix) {
             self.bootstraBtn.enabled = NO;
             [self.bootstraBtn setTitle:Localized(@"Wait For Fix") forState:UIControlStateDisabled];
+            [AppDelegate showMesage:@"ios17.0 on A15+ is still waiting for fixing" title:Localized(@"Wait For Fix")];
         } else {
             self.bootstraBtn.enabled = YES;
             [self.bootstraBtn setTitle:Localized(@"Install") forState:UIControlStateNormal];
@@ -260,6 +261,11 @@ OSStatus SecCodeCopySigningInformation(SecStaticCodeRef code, SecCSFlags flags, 
 - (IBAction)bootstrap:(id)sender {
     if(![self checkTSVersion]) {
         [AppDelegate showMesage:Localized(@"Your trollstore version is too old, Bootstrap only supports trollstore>=2.0") title:Localized(@"Error")];
+        return;
+    }
+    
+    if(spawnRoot([NSBundle.mainBundle.bundlePath stringByAppendingPathComponent:@"basebin/devtest"], nil, nil, nil) != 0) {
+        [AppDelegate showMesage:Localized(@"Your device does not seem to have developer mode enabled.\n\nPlease enable developer mode in Settings->[Privacy&Security] and reboot your device.") title:Localized(@"Error")];
         return;
     }
     
